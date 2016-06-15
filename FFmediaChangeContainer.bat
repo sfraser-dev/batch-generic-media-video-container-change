@@ -1,7 +1,16 @@
 @echo off
 
+:: MPEG note:
+:: A FFmpeg extension of ".mpg" targets MPEG PS, an extension of ".ts" targets MPEG TS.
+:: Use FFmpeg flag "-f mpeg" to target MPEG PS and "-f mpegts" to target MPEG TS.
+:: For example, if an input MPEG TS container has a ".mpg" extension, it can be processed via:
+:: ffmpeg -y -i %THE_BACKUP_NAME% -c:v copy -c:a copy -f mpegts %THE_ORIGINAL_NAME%
+:: This will result in a fixed MPEG TS container with a ".mpg" extension.
+
+:: Look for media containers with the following extension  
 SET CONTAINER_EXTN=mpg
-:: Recursively search for media containers
+
+:: Recursively search for required media containers
 for /f "delims=" %%f in ('dir "*.%CONTAINER_EXTN%" /s/b') do @call:thefun "%%f"
 goto:eof
 
@@ -19,4 +28,5 @@ move /Y %THE_ORIGINAL_NAME% %THE_BACKUP_NAME%
 :: Process with FFMPEG
 ffmpeg -y -i %THE_BACKUP_NAME% -c:v copy -c:a copy %THE_ORIGINAL_NAME%
 goto:eof
+
 
